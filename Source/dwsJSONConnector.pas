@@ -283,7 +283,7 @@ type
       function QueryInterface({$IFDEF FPC_HAS_CONSTREF}constref{$ELSE}const{$ENDIF} IID: TGUID; out Obj): HResult; stdcall;
 
       function GetSelf : TObject;
-      function ToString : UnicodeString; override;
+      function ToString : UnicodeString; {$IFDEF FPC} reintroduce; virtual; {$ELSE} override; {$ENDIF}
 
       function Value : TdwsJSONValue;
 
@@ -297,7 +297,7 @@ type
 
    TBoxedNilJSONValue = class (TInterfacedObject, IBoxedJSONValue, ICoalesceable, IGetSelf, IUnknown)
       function GetSelf : TObject;
-      function ToString : UnicodeString; override;
+      function ToString : UnicodeString; {$IFDEF FPC} reintroduce; virtual; {$ELSE} override; {$ENDIF}
       function Value : TdwsJSONValue;
       function IsFalsey : Boolean;
    end;
@@ -841,7 +841,7 @@ begin
             case pParam^.VType of
                varInt64 : baseArray.Add(pParam^.VInt64);
                varDouble : baseArray.Add(pParam^.VDouble);
-               varUString : baseArray.Add(UnicodeString(pParam^.VUString));
+               varUString : baseArray.Add(UnicodeString(pParam^.{$IFDEF FPC} VString {$ELSE} VUString {$ENDIF}));
                varBoolean : baseArray.Add(pParam^.VBoolean);
                varUnknown : begin
                   if pParam.VUnknown<>nil then begin
@@ -952,7 +952,7 @@ begin
          end;
          varUString : begin
             argValue:=TdwsJSONImmediate.Create;
-            argValue.AsString:=UnicodeString(pVal^.VUString);
+            argValue.AsString:=UnicodeString(pVal^.{$IFDEF FPC} VString {$ELSE} VUString {$ENDIF});
          end;
          varBoolean : begin
             argValue:=TdwsJSONImmediate.Create;

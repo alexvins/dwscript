@@ -128,6 +128,8 @@ type
    end;
    TSymbolPosition = ^TSymbolPositionRec;
 
+   TSimpleList_TSymbolPosition = TSimpleList<TSymbolPosition>;
+
    {Re-list every symbol (pointer to it) and every position it is in in the script }
    TSymbolPositionList = class (TRefCountedObject)
       type
@@ -141,7 +143,7 @@ type
 
       private
          FSymbol : TSymbol;                        // pointer to the symbol
-         FPosList : TSimpleList<TSymbolPosition>;  // list of positions where symbol is declared and used
+         FPosList : TSimpleList_TSymbolPosition;  // list of positions where symbol is declared and used
          FSourceFile : TSourceFile; // not nil only if all positions are in that file
 
       protected
@@ -177,7 +179,7 @@ type
    end;
 
    TdwsSymbolDictionaryProc = procedure (sym : TSymbol) of object;
-   TdwsSymbolDictionaryRef = reference to procedure (sym : TSymbol);
+   TdwsSymbolDictionaryRef = {$IFNDEF FPC} reference to {$ENDIF} procedure (sym : TSymbol) {$IFDEF FPC} is nested {$ENDIF};
 
    { List all symbols in the script. Each symbol list contains a list of the
      positions where it was used. }
@@ -367,7 +369,9 @@ type
          procedure AddString(const i : Int64); overload; virtual;
          procedure AddCRLF; virtual;
          procedure Clear; virtual; abstract;
-
+         {$IFDEF FPC}
+         function ToString : UnicodeString; virtual; reintroduce;
+         {$ENDIF}
          function ToUTF8String : UTF8String; virtual;
          function ToDataString : RawByteString; virtual;
    end;
@@ -3641,6 +3645,13 @@ begin
    Result:=UTF8Encode(ToString);
 end;
 
+{$IFDEF FPC}
+function TdwsResult.ToString : UnicodeString;
+begin
+   Result:='';
+end
+{$ENDIF};
+
 // AddCRLF
 //
 procedure TdwsResult.AddCRLF;
@@ -6673,7 +6684,7 @@ var
 begin
    p:=PVarData(GetParamAsPVariant(index));
    {$ifdef FPC}
-   if p^.VType=varString then
+   if p^.VType=varUString then
       Result:=UnicodeString(p.VString)
    {$else}
    if p^.VType=varUString then

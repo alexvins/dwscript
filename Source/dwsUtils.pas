@@ -16,6 +16,10 @@
 {**********************************************************************}
 unit dwsUtils;
 
+{$IFDEF FPC}
+{$DEFINE DWS_FPC_NOUNICODE}
+{$ENDIF}
+
 {$I dws.inc}
 {$R-}
 
@@ -408,7 +412,7 @@ type
          FGrowth : Integer;
          FHighIndex : Integer;
 
-      protected
+      {$IFDEF FPC} public {$ELSE} protected {$ENDIF}
          procedure Grow;
          procedure Resize(newSize : Integer);
 
@@ -1707,7 +1711,11 @@ begin
       varUnknown :
          Result := not CoalesceableIsFalsey(IUnknown(TVarData(v).VUnknown));
       varUString :
+         {$IFDEF FPC}
+         Result := TVarData(v).VString <> nil;
+         {$ELSE}
          Result := TVarData(v).VUString <> nil;
+         {$ENDIF}
       varDouble :
          Result := TVarData(v).VDouble <> 0;
       varNull, varEmpty :
@@ -1745,11 +1753,19 @@ procedure VarClearSafe(var v : Variant);
 begin
    case TVarData(v).VType of
       varEmpty : begin
+         {$IFDEF FPC}
+         TVarData(v).VQWord:=0;
+         {$ELSE}
          TVarData(v).VUInt64:=0;
+         {$ENDIF}
       end;
       varBoolean, varInt64, varDouble : begin
          TVarData(v).VType:=varEmpty;
+         {$IFDEF FPC}
+         TVarData(v).VQWord:=0;
+         {$ELSE}
          TVarData(v).VUInt64:=0;
+         {$ENDIF}
       end;
       varUnknown : begin
          TVarData(v).VType:=varEmpty;
@@ -1765,7 +1781,11 @@ begin
       end;
    else
       VarClear(v);
+      {$IFDEF FPC}
+      TVarData(v).VQWord:=0;
+      {$ELSE}
       TVarData(v).VUInt64:=0;
+      {$ENDIF}
    end;
 end;
 
@@ -1805,13 +1825,27 @@ begin
       varUString : begin
          {$ifdef DEBUG} Assert(TVarData(dest).VUString=nil); {$endif}
          TVarData(dest).VType:=varUString;
+         {$IFDEF FPC}
+         UnicodeString(TVarData(dest).VString):=String(TVarData(src).VString);
+         {$ELSE}
          UnicodeString(TVarData(dest).VUString):=String(TVarData(src).VUString);
+         {$ENDIF}
       end;
       varSmallint..varSingle, varCurrency..varDate, varError, varShortInt..varLongWord, varUInt64 : begin
+         {$IFDEF FPC}
+         TVarData(dest).vwords[0]:=TVarData(src).vwords[0];
+         TVarData(dest).vwords[1]:=TVarData(src).vwords[1];
+         TVarData(dest).vwords[2]:=TVarData(src).vwords[2];
+         TVarData(dest).vwords[3]:=TVarData(src).vwords[3];
+         TVarData(dest).vwords[4]:=TVarData(src).vwords[4];
+         TVarData(dest).vwords[5]:=TVarData(src).vwords[5];
+         TVarData(dest).vwords[6]:=TVarData(src).vwords[6];
+         {$ELSE}
          TVarData(dest).RawData[0]:=TVarData(src).RawData[0];
          TVarData(dest).RawData[1]:=TVarData(src).RawData[1];
          TVarData(dest).RawData[2]:=TVarData(src).RawData[2];
          TVarData(dest).RawData[3]:=TVarData(src).RawData[3];
+         {$ENDIF}
       end;
    else
       dest:=src;
@@ -1880,7 +1914,7 @@ end;
 
 // VarSetDefaultInt64
 //
-procedure VarSetDefaultInt64(var dest : Variant); overload;
+procedure VarSetDefaultInt64(var dest : Variant);
 begin
    VarClearSafe(dest);
 
@@ -2196,7 +2230,7 @@ end;
 
 // BytesToScriptString
 //
-procedure BytesToScriptString(const p : PByte; n : Integer; var result : UnicodeString); overload;
+procedure BytesToScriptString(const p : PByte; n : Integer; var result : UnicodeString);
 var
    i : Integer;
    pSrc : PByteArray;
@@ -3837,7 +3871,7 @@ var
 begin
    {$ifdef FPC}
    if utf16String<>'' then
-      WriteBuf(utf16String[1], Length(utf16String)*SizeOf(WideChar));
+      WriteBuf(@utf16String[1], Length(utf16String)*SizeOf(WideChar));
    {$else}
    stringCracker:=NativeUInt(utf16String);
    if stringCracker<>0 then
@@ -5266,7 +5300,7 @@ end;
 function TClassCloneConstructor<T>.Create : T;
 begin
    {$ifdef FPC}
-   System.GetMem(Pointer(Result), Size);
+   System.GetMem(Pointer(Result), FSize);
    System.Move(Pointer(FTemplate)^, Pointer(Result)^, FSize);
    {$else}
    GetMemForT(Result, FSize);

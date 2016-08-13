@@ -514,14 +514,14 @@ end;
 //
 procedure TStackMixIn.InitRelativeDataPtr(var dataPtr : IDataContext; addr : Integer);
 begin
-   dataPtr:=TRelativeDataContext.Create(GetPData, BasePointer+addr);
+   //TODO: !!! dataPtr:=TRelativeDataContext.Create(GetPData, BasePointer+addr);
 end;
 
 // InitRelativeDataPtrLevel
 //
 procedure TStackMixIn.InitRelativeDataPtrLevel(var dataPtr : IDataContext; level, addr : Integer);
 begin
-   dataPtr:=TRelativeDataContext.Create(GetPData, GetSavedBp(level)+addr);
+   //TODO: !!! dataPtr:=TRelativeDataContext.Create(GetPData, GetSavedBp(level)+addr);
 end;
 
 // CreateDataContext

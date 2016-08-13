@@ -102,6 +102,8 @@ type
    end;
    PDataPtrPool= ^TDataContextPool;
 
+   { TDataContext }
+
    TDataContext = class(TInterfacedObject, IDataContext, IGetSelf)
       private
          FAddr : Integer;
@@ -169,6 +171,8 @@ type
          procedure SetDataLength(n : Integer);
 
          function  HashCode(size : Integer) : Cardinal;
+
+         function ToString : UnicodeString; {$IFDEF FPC} virtual; reintroduce;  {$ELSE} override; {$ENDIF}
    end;
 
    TGetPDataFunc = function : PData of object;
@@ -179,7 +183,7 @@ type
          FAddr : Integer;
 
       public
-         constructor Create(const getPData : TGetPDataFunc; addr : Integer);
+         constructor Create(getPData : TGetPDataFunc; addr : Integer);
 
          function GetSelf : TObject;
 
@@ -325,10 +329,17 @@ begin
          n := 8;
       end;
       varUString : begin
+         {$IFDEF FPC}
+         if p.VString <> nil then begin
+            buf := SimpleStringHash(UnicodeString(p.VString));
+            k := @buf;
+         end
+         {$ELSE}
          if p.VUString <> nil then begin
             buf := SimpleStringHash(String(p.VUString));
             k := @buf;
-         end;
+         end
+         {$ENDIF};
          n := 4;
       end;
       varString : begin
@@ -448,14 +459,14 @@ end;
 
 // _AddRef
 //
-function TDataContext._AddRef: Integer;
+function TDataContext._AddRef: Integer; stdcall;
 begin
    Result := InterlockedIncrement(FRefCount);
 end;
 
 // _Release
 //
-function TDataContext._Release: Integer;
+function TDataContext._Release: Integer; stdcall;
 begin
    Result := InterlockedDecrement(FRefCount);
    if Result = 0 then
@@ -779,13 +790,18 @@ begin
    Result:=DWSHashCode(FData, FAddr, size);
 end;
 
+function TDataContext.ToString: UnicodeString;
+begin
+  Result:=inherited ToString;
+end;
+
 // ------------------
 // ------------------ TRelativeDataContext ------------------
 // ------------------
 
 // Create
 //
-constructor TRelativeDataContext.Create(const getPData : TGetPDataFunc; addr : Integer);
+constructor TRelativeDataContext.Create(getPData : TGetPDataFunc; addr : Integer);
 begin
    FGetPData:=getPData;
    FAddr:=addr;

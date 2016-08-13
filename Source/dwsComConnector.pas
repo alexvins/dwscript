@@ -87,12 +87,21 @@ procedure RaiseOleError(err : HResult; const excepInfo : TExcepInfo);
 var
    msg : UnicodeString;
 begin
+   {$IFDEF FPC}
+   msg:=excepInfo.Description;
+   if excepInfo.Source<>'' then begin
+      if msg<>'' then
+         msg:=excepInfo.Source+', '+msg
+      else msg:=excepInfo.Source;
+   end;
+   {$ELSE}
    msg:=excepInfo.bstrDescription;
    if excepInfo.bstrSource<>'' then begin
       if msg<>'' then
          msg:=excepInfo.bstrSource+', '+msg
       else msg:=excepInfo.bstrSource;
    end;
+   {$ENDIF}
    if msg<>'' then
       msg:=' from '+msg;
    raise EOleError.CreateFmt('OLE Error %.8x (%s)%s',
@@ -181,8 +190,8 @@ begin
                end;
                varUString : begin
                   // Transform Delphi-strings to OLE-strings
-                  strings[strCount].BStr := StringToOleStr(UnicodeString(param.VUString));
-                  strings[strCount].PStr := @param.VUString;
+                  strings[strCount].BStr := StringToOleStr(UnicodeString(param.{$IFDEF FPC} VString {$ELSE} VUString {$ENDIF}));
+                  strings[strCount].PStr := @param.{$IFDEF FPC} VString {$ELSE} VUString {$ENDIF};
                   argPtr.vt := VT_BSTR or VT_BYREF;
                   argPtr.pbstrVal := @strings[strCount].BStr;
                   Inc(strCount);

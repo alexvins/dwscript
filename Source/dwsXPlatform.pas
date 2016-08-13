@@ -19,6 +19,11 @@
 {**********************************************************************}
 unit dwsXPlatform;
 
+{$IFDEF FPC}
+{$DEFINE DWS_FPC_NOUNICODE}
+{$ENDIF}
+
+
 {$I dws.inc}
 
 //
@@ -413,7 +418,7 @@ end;
 function AnsiCompareText(const S1, S2: UnicodeString) : Integer;
 begin
    {$ifdef FPC}
-   Result:=widestringmanager.CompareTextUnicodeStringProc(s1,s2);
+   Result:=widestringmanager.CompareUnicodeStringProc(s1,s2, [coIgnoreCase]);
    {$else}
    Result:=SysUtils.AnsiCompareText(S1, S2);
    {$endif}
@@ -424,7 +429,7 @@ end;
 function AnsiCompareStr(const S1, S2: UnicodeString) : Integer;
 begin
    {$ifdef FPC}
-   Result:=widestringmanager.CompareUnicodeStringProc(s1,s2);
+   Result:=widestringmanager.CompareUnicodeStringProc(s1,s2,[]);
    {$else}
    Result:=SysUtils.AnsiCompareStr(S1, S2);
    {$endif}
@@ -496,7 +501,7 @@ end;
 //
 function APINormalizeString(normForm : Integer; lpSrcString : LPCWSTR; cwSrcLength : Integer;
                             lpDstString : LPWSTR; cwDstLength : Integer) : Integer;
-                            stdcall; external 'Normaliz.dll' name 'NormalizeString' delayed;
+                            stdcall; external 'Normaliz.dll' name 'NormalizeString' {$IFNDEF FPC} delayed{$ENDIF};
 function NormalizeString(const s, form : UnicodeString) : String;
 var
    nf, len : Integer;
@@ -1565,7 +1570,11 @@ class function TTimerTimeout.Create(delayMSec : Cardinal; onTimer : TTimerEvent)
 var
    obj : TTimerTimeout;
 begin
-   obj := inherited Create;
+  {$IFDEF FPC}
+  obj := TTimerTimeout(inherited NewInstance);
+  {$ELSE}
+  obj := inherited Create;
+  {$ENDIF}
    Result := obj;
    obj.FOnTimer := onTimer;
    CreateTimerQueueTimer(obj.FTimer, 0, TTimerTimeoutCallBack, obj,

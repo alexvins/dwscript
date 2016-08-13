@@ -56,7 +56,7 @@ type
          procedure Clear;
 
          procedure ToJSON(writer : TdwsJSONWriter);
-         function ToString : UnicodeString; override;
+         function ToString : UnicodeString; {$IFDEF FPC} virtual; reintroduce; {$ELSE} override; {$ENDIF}
    end;
 
    // TdwsSamplingDebugger

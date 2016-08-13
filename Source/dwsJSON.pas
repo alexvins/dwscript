@@ -15,6 +15,10 @@
 {**********************************************************************}
 unit dwsJSON;
 
+{$IFDEF FPC}
+{$DEFINE DWS_FPC_NOUNICODE}
+{$ENDIF}
+
 {$I dws.inc}
 
 interface
@@ -792,7 +796,7 @@ end;
 procedure TdwsJSONParserState.ParseStringArray(dest : TStringList);
 var
    c : Char;
-   buf : String;
+   buf : UnicodeString;
 begin
    c:=SkipBlanks(' ');
    if c<>'[' then

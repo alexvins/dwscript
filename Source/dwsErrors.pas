@@ -781,7 +781,7 @@ begin
    inherited WriteToJSON(writer);
    if StrEndsWith(ClassName, 'Message') then
       writer.WriteString('type', Copy(ClassName, 2, Length(ClassName)-1-Length('Message')));
-   writer.WriteName('pos').BeginObject;
+   writer.WriteName(UnicodeString('pos')).BeginObject;
       writer.WriteString('file', ScriptPos.SourceName);
       writer.WriteInteger('line', ScriptPos.Line);
       writer.WriteInteger('col', ScriptPos.Col);

@@ -5761,7 +5761,7 @@ end;
 //
 function TCoalesceStrExpr.Optimize(prog : TdwsProgram; exec : TdwsExecution) : TProgramExpr;
 var
-   s : String;
+   s : UnicodeString;
 begin
    if Left.IsConstant then begin
       Left.EvalAsString(exec, s);
@@ -7148,7 +7148,7 @@ end;
 procedure TCaseStringExpr.EvalNoResult(exec : TdwsExecution);
 var
    x : Integer;
-   value : String;
+   value : UnicodeString;
    cc : TCaseCondition;
 begin
    FValueExpr.EvalAsString(exec, value);
@@ -7294,7 +7294,7 @@ end;
 //
 function TCompareCaseCondition.StringIsTrue(exec : TdwsExecution; const value : String) : Boolean;
 var
-   buf : String;
+   buf : UnicodeString;
 begin
    FCompareExpr.EvalAsString(exec, buf);
    Result:=(buf=value);

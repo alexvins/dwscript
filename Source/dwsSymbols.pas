@@ -25,8 +25,7 @@ interface
 
 uses SysUtils, Variants, Classes,
    dwsStrings, dwsErrors, dwsUtils, dwsDateTime,
-   dwsTokenizer, dwsStack, dwsXPlatform, dwsDataContext
-   {$ifdef FPC},LazUTF8{$endif};
+   dwsTokenizer, dwsStack, dwsXPlatform, dwsDataContext;
 
 type
 
@@ -1892,7 +1891,9 @@ type
 const
    cFuncKindToString : array [Low(TFuncKind)..High(TFuncKind)] of UnicodeString = (
       'function', 'procedure', 'constructor', 'destructor', 'method', 'lambda' );
-   cFirstFieldUnprepared : TFieldSymbol = Pointer(-1);
+{$IFDEF FPC} var   {$ENDIF}
+   cFirstFieldUnprepared : TFieldSymbol {$IFNDEF FPC} = Pointer(-1) {$ENDIF};
+{$IFDEF FPC} const  {$ENDIF}
    cDefaultRandSeed : UInt64 = 88172645463325252;
 
 // ------------------------------------------------------------------
@@ -4887,7 +4888,7 @@ end;
 //
 procedure TNilSymbol.InitData(const data : TData; offset : Integer);
 begin
-   VarCopySafe(data[offset], nil);
+   VarCopySafe(data[offset], IUnknown(nil));
 end;
 
 // ------------------
@@ -7543,5 +7544,11 @@ begin
    end;
    Result:=False;
 end;
+
+initialization
+
+{$IFDEF FPC}
+cFirstFieldUnprepared := Pointer(-1);
+{$ENDIF}
 
 end.

@@ -28,6 +28,22 @@
 
 {global compiler options}
 
+{$IFDEF FPC}
+  //{$mode} must be before anything else
+  {$IFDEF DWS_OBJFPC}
+    {$MODE OBJFPC}
+    {$modeswitch advancedrecords,nestedprocvars}
+  {$ELSE}
+    {$IFDEF DWS_FPC_NOUNICODE}
+      {$MODE DELPHI}
+    {$ELSE}
+      {$MODE DELPHIUNICODE}
+    {$ENDIF}
+    {$modeswitch nestedprocvars}
+  {$ENDIF}
+{$ENDIF}
+
+
 {$A+} // align on
 {$B-} // BoolEval off
 {$X+} // extended syntax
@@ -58,7 +74,6 @@
       {$DEFINE DELPHI_XE3_PLUS}
    {$IFEND}
 {$ELSE}
-   {$mode delphi}
    {$DEFINE PUREPASCAL}
 {$ENDIF}
 

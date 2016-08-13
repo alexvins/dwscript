@@ -366,7 +366,7 @@ begin
       Inc(pSrc);
    end;
    SetLength(raw, NativeUInt(pDest)-NativeUInt(Pointer(raw)));
-   Result:=UTF8ToUnicodeString(raw);
+{$IFDEF FPC}    Result:=raw;  {$ELSE}    Result:=UTF8ToUnicodeString(raw);  {$ENDIF}
 end;
 
 // EncodeURLEncoded

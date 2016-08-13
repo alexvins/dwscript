@@ -19,6 +19,10 @@
 {**********************************************************************}
 unit dwsComp;
 
+{$IFDEF FPC}
+{$DEFINE DWS_FPC_NOUNICODE}
+{$ENDIF}
+
 {$I dws.inc}
 
 interface
