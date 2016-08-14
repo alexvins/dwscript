@@ -50,7 +50,7 @@
         <PackageName Value="FCL"/>
       </Item5>
     </RequiredPackages>
-    <Units Count="5">
+    <Units Count="6">
       <Unit0>
         <Filename Value="lang_tests.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -60,17 +60,21 @@
         <IsPartOfProject Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="UdwsUnitTests.pas"/>
+        <Filename Value="UCornerCasesTests.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit2>
       <Unit3>
-        <Filename Value="UScriptTests.pas"/>
+        <Filename Value="UdwsUnitTests.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit3>
       <Unit4>
-        <Filename Value="dwsXPlatformTests.pas"/>
+        <Filename Value="UScriptTests.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit4>
+      <Unit5>
+        <Filename Value="dwsXPlatformTests.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit5>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -113,7 +117,7 @@
     </Other>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="22">
+    <Exceptions Count="23">
       <Item1>
         <Name Value="EAbort"/>
       </Item1>
@@ -180,6 +184,9 @@
       <Item22>
         <Name Value="EScriptException"/>
       </Item22>
+      <Item23>
+        <Name Value="ETestException"/>
+      </Item23>
     </Exceptions>
   </Debugging>
 </CONFIG>

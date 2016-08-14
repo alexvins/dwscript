@@ -310,6 +310,11 @@ begin
                expectedErrorsFileName:=ChangeFileExt(UnicodeString(FFailures[i]), '.txt');
          end else expectedErrorsFileName:=ChangeFileExt(UnicodeString(FFailures[i]), '.txt');
 
+         {$ifdef FPC}
+         if FileExists(ChangeFileExt(expectedErrorsFileName, '.fpctxt')) then
+            expectedErrorsFileName:=ChangeFileExt(expectedErrorsFileName, '.fpctxt');
+         {$endif}
+
          if FileExists(expectedErrorsFileName) then begin
             expectedError.LoadFromFile(expectedErrorsFileName);
             try
