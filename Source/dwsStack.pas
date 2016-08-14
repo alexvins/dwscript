@@ -39,8 +39,8 @@ type
 
    // TStackMixIn
    //
-   TStack = ^TStackMixIn;
-   TStackMixIn = record
+
+   TStackMixIn = class
       private
          FBaseData : PDataArray;
          FBasePointer : Integer;
@@ -134,6 +134,8 @@ type
          property MaxRecursionDepth : Integer read FParams.MaxRecursionDepth write FParams.MaxRecursionDepth;
          property MaxExceptionDepth : Integer read FParams.MaxExceptionDepth write FParams.MaxExceptionDepth;
    end;
+
+   TStack = TStackMixIn;
 
    EScriptStackException = class(Exception);
    EScriptStackOverflow = class(EScriptStackException);
@@ -514,14 +516,14 @@ end;
 //
 procedure TStackMixIn.InitRelativeDataPtr(var dataPtr : IDataContext; addr : Integer);
 begin
-   //TODO: !!! dataPtr:=TRelativeDataContext.Create(GetPData, BasePointer+addr);
+   dataPtr:=TRelativeDataContext.Create(GetPData, BasePointer+addr);
 end;
 
 // InitRelativeDataPtrLevel
 //
 procedure TStackMixIn.InitRelativeDataPtrLevel(var dataPtr : IDataContext; level, addr : Integer);
 begin
-   //TODO: !!! dataPtr:=TRelativeDataContext.Create(GetPData, GetSavedBp(level)+addr);
+   dataPtr:=TRelativeDataContext.Create(GetPData, GetSavedBp(level)+addr);
 end;
 
 // CreateDataContext

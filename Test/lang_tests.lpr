@@ -3,7 +3,7 @@ program lang_tests;
 {$mode objfpc}{$H+}
 
 uses
-  Interfaces, Forms, dwsXPlatformTests, UAlgorithmsTests,
+  Interfaces, Forms, dwsXPlatformTests, UAlgorithmsTests, UScriptTests,
   GuiTestRunner;
 
 {$R *.res}

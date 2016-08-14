@@ -6872,6 +6872,7 @@ end;
 constructor TdwsExecution.Create(const stackParams : TStackParameters);
 begin
    inherited Create;
+   FStack := TStack.Create;
    FStack.Initialize(stackParams);
    FStack.Reset;
    FExceptionObjectStack:=TSimpleStack<IScriptObj>.Create;
@@ -6882,9 +6883,11 @@ end;
 //
 destructor TdwsExecution.Destroy;
 begin
+
    Assert(not Assigned(FSelfScriptObject));
    FExceptionObjectStack.Free;
    FStack.Finalize;
+   FStack.Free;
    FCallStack.Free;
    FFormatSettings.Free;
    inherited;
@@ -6991,7 +6994,7 @@ end;
 //
 function TdwsExecution.GetStack : TStack;
 begin
-   Result:=@FStack;
+   Result:=FStack;
 end;
 
 // GetProgramState
