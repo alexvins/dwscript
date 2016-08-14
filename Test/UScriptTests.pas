@@ -129,20 +129,28 @@ var
    source : TStringList;
    i : Integer;
    prog : IdwsProgram;
+{$IFDEF FPC}    s: ansistring; {$ENDIF}
 begin
    source:=TStringList.Create;
    try
 
       for i:=0 to FTests.Count-1 do begin
 
-         {$ifdef FPC}
-         // triggers a GDB bug which crashes Lazarus
-         if Copy(ExtractFileName(FTests[i]), 1, 11)='div_by_zero' then continue;
-         {$endif}
-
          source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text, 'Test\'+ExtractFileName(FTests[i]));
+         {$ifdef FPC}
+         if source.Count>0 then
+         begin
+            s := Copy(source[0], 1, 3);
+            if (length(s)>=3) and (s[1] = #$EF) and (s[2] = #$BB) and (s[3] = #$BF) then
+               source[0]:=Copy(source[0], 4, MaxInt);
+
+         end;
+         {$endif}
+
+
+
+         prog:=FCompiler.Compile({$IFDEF FPC} UTF8Decode(source.Text) {$ELSE} source.Text {$ENDIF}, 'Test\'+ExtractFileName(FTests[i]));
 
          CheckEquals(False, prog.Msgs.HasErrors, FTests[i]+#13#10+prog.Msgs.AsInfo);
 
@@ -166,8 +174,9 @@ var
    i : Integer;
    prog : IdwsProgram;
    resultsFileName : String;
-   output : String;
+   output : UnicodeString;
    exec : IdwsProgramExecution;
+   {$IFDEF FPC}    s: ansistring; {$ENDIF}
 begin
    source:=TStringList.Create;
    expectedResult:=TStringList.Create;
@@ -186,7 +195,17 @@ begin
 
          source.LoadFromFile(FTests[i]);
 
-         prog:=FCompiler.Compile(source.Text, 'Test\'+ExtractFileName(FTests[i]));
+         {$ifdef FPC}
+         if source.Count>0 then
+         begin
+            s := Copy(source[0], 1, 3);
+            if (length(s)>=3) and (s[1] = #$EF) and (s[2] = #$BB) and (s[3] = #$BF) then
+               source[0]:=Copy(source[0], 4, MaxInt);
+
+         end;
+         {$endif}
+
+         prog:=FCompiler.Compile({$IFDEF FPC} UTF8Decode(source.Text) {$ELSE} source.Text {$ENDIF}, 'Test\'+ExtractFileName(FTests[i]));
 
          CheckEquals(False, prog.Msgs.HasErrors, FTests[i]+#13#10+prog.Msgs.AsInfo);
          try
@@ -220,10 +239,13 @@ begin
             expectedResult.LoadFromFile(resultsFileName);
             {$ifdef FPC}
             if expectedResult.Count>0 then
-               if Copy(expectedResult[0], 1, 3)=#$EF#$BB#$BF then
+            begin
+               s := Copy(expectedResult[0], 1, 3);
+               if (length(s)>=3) and (s[1] = #$EF) and (s[2] = #$BB) and (s[3] = #$BF) then
                   expectedResult[0]:=Copy(expectedResult[0], 4, MaxInt);
+            end;
             {$endif}
-            CheckEquals(expectedResult.Text, output, FTests[i]);
+            CheckEquals({$IFDEF FPC} UTF8Decode(expectedResult.Text) {$ELSE} expectedResult.Text {$ENDIF}, output, FTests[i]);
          end else CheckEquals('', output, FTests[i]);
 
       end;
