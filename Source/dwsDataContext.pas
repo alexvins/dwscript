@@ -589,7 +589,7 @@ var
 begin
    p:=@FData[FAddr+addr];
    {$ifdef FPC}
-   if p.VType=varString then
+   if p.VType=varUString then
       UnicodeString(p.VString):=value
    {$else}
    if p.VType=varUString then

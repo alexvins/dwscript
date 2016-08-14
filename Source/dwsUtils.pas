@@ -1641,6 +1641,8 @@ begin
    case varData^.VType of
       {$ifdef FPC}
       varString :
+         s:=RawByteStringToScriptString(RawByteString(varData^.VString));
+      varUString :
          s:=UnicodeString(varData^.VString);
       {$else}
       varString :
