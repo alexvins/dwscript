@@ -112,7 +112,11 @@ begin
    sl:=TStringList.Create;
    try
       sl.LoadFromFile('SimpleScripts\'+scriptName);
+      {$IFDEF FPC}
+      scriptSource:= UTF8Decode(sl.Text);
+      {$ELSE}
       scriptSource:=sl.Text;
+      {$ENDIF}
    finally
       sl.Free;
    end;

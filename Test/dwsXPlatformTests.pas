@@ -29,12 +29,14 @@ uses
 type
 
    {$ifdef FPC}
+
+   { TTestCase }
+
    TTestCase = class (fpcunit.TTestCase)
       public
-         procedure CheckEquals(const expected, actual: UnicodeString; const msg: String = ''); overload;
-         //procedure CheckEquals(const expected : String; const actual: UnicodeString; const msg: String = ''); overload;
+         procedure CheckEquals(const expected, actual: UnicodeString; const msg: UnicodeString = ''); overload;
    end;
-
+   TTestCaseClass = class of TTestCase;
    ETestFailure = class (Exception);
    {$else}
    TTestCase = class(TestFrameWork.TTestCase)
@@ -74,14 +76,22 @@ end;
 // CheckEquals
 //
 {$ifdef FPC}
-procedure TTestCase.CheckEquals(const expected, actual: UnicodeString; const msg: String = '');
+function __ComparisonMsg(const aExpected: UnicodeString; const aActual: UnicodeString; const aCheckEqual: boolean=true): UnicodeString;
+// aCheckEqual=false gives the error message if the test does *not* expect the results to be the same.
+const
+  SCompare = ' expected: <%s> but was: <%s>';
+  SCompareNotEqual = ' expected: not equal to <%s> but was: <%s>';
 begin
-   AssertTrue(msg + ComparisonMsg(Expected, Actual), AnsiCompareStr(Expected, Actual) = 0);
+  if aCheckEqual then
+    Result := UnicodeFormat(UnicodeString(SCompare), [aExpected, aActual])
+  else {check unequal requires opposite error message}
+    Result := UnicodeFormat(UnicodeString(SCompareNotEqual), [aExpected, aActual]);
 end;
-//procedure TTestCase.CheckEquals(const expected : String; const actual: UnicodeString; const msg: String = '');
-//begin
-//   AssertTrue(msg + ComparisonMsg(Expected, Actual), AnsiCompareStr(Expected, Actual) = 0);
-//end;
+
+procedure TTestCase.CheckEquals(const expected, actual: UnicodeString; const msg: UnicodeString);
+begin
+   AssertTrue( UTF8Encode (msg + __ComparisonMsg(Expected, Actual)), UnicodeCompareStr(Expected, Actual) = 0);
+end;
 
 {$else}
 

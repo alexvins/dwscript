@@ -37,3 +37,4 @@
 *.res
 /Test/lang_tests.exe
 /Test/lang_tests.fpcunit.ini
+/Test/heap.trc

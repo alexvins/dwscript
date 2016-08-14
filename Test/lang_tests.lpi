@@ -92,16 +92,19 @@
         <SyntaxMode Value="DelphiUnicode"/>
         <IncludeAssertionCode Value="True"/>
         <CPPInline Value="False"/>
+        <StaticKeyword Value="True"/>
       </SyntaxOptions>
     </Parsing>
     <CodeGeneration>
       <Checks>
         <IOChecks Value="True"/>
+        <RangeChecks Value="True"/>
+        <OverflowChecks Value="True"/>
+        <StackChecks Value="True"/>
       </Checks>
     </CodeGeneration>
     <Linking>
       <Debugging>
-        <DebugInfoType Value="dsStabs"/>
         <UseHeaptrc Value="True"/>
       </Debugging>
       <Options>
@@ -111,13 +114,17 @@
       </Options>
     </Linking>
     <Other>
+      <Verbosity>
+        <ShowNotes Value="False"/>
+        <ShowHints Value="False"/>
+      </Verbosity>
       <CompilerMessages>
         <IgnoredMessages idx5024="True" idx5023="True" idx4055="True"/>
       </CompilerMessages>
     </Other>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="23">
+    <Exceptions Count="28">
       <Item1>
         <Name Value="EAbort"/>
       </Item1>
@@ -187,6 +194,21 @@
       <Item23>
         <Name Value="ETestException"/>
       </Item23>
+      <Item24>
+        <Name Value="RunError(200)"/>
+      </Item24>
+      <Item25>
+        <Name Value="EDivByZero"/>
+      </Item25>
+      <Item26>
+        <Name Value="EScriptExceptionOverflow"/>
+      </Item26>
+      <Item27>
+        <Name Value="EdwsInvalidUnitAddition"/>
+      </Item27>
+      <Item28>
+        <Name Value="EAssertionFailed"/>
+      </Item28>
     </Exceptions>
   </Debugging>
 </CONFIG>

@@ -4128,7 +4128,7 @@ begin
    try
       p:=PVarData(@v);
       {$ifdef FPC}
-      if p^.VType=varString then
+      if p^.VType=varUString then
          Result:=UnicodeString(p.VString)
       {$else}
       if p^.VType=varUString then

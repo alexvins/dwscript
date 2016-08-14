@@ -117,7 +117,7 @@ procedure SetDecimalSeparator(c : Char);
 function GetDecimalSeparator : Char;
 
 type
-   TCollectFileProgressEvent = procedure (const directory : String; var skipScan : Boolean) of object;
+   TCollectFileProgressEvent = procedure (const directory : UnicodeString; var skipScan : Boolean) of object;
 
 procedure CollectFiles(const directory, fileMask : UnicodeString;
                        list : TStrings; recurseSubdirectories: Boolean = False;
@@ -133,15 +133,6 @@ type
    NativeUInt = Cardinal;
    PNativeUInt = ^NativeUInt;
    {$IFEND}
-   {$ENDIF}
-
-   {$IFDEF FPC}
-   TBytes = array of Byte;
-
-   RawByteString = UnicodeString;
-
-   PNativeInt = ^NativeInt;
-   PUInt64 = ^UInt64;
    {$ENDIF}
 
    TPath = class
@@ -704,7 +695,6 @@ type
       Data : TWin32FindData;
    end;
 
-   function _FindFirstFileExA(lpfilename : LPCStr;fInfoLevelId:FINDEX_INFO_LEVELS ;lpFindFileData:pointer;fSearchOp : FINDEX_SEARCH_OPS;lpSearchFilter:pointer;dwAdditionalFlags:dword):Handle; stdcall; external 'kernel32' name 'FindFirstFileExA';
 
 // CollectFilesMasked
 //
@@ -718,7 +708,7 @@ const
 var
    searchRec : TFindDataRec;
    infoLevel : TFindexInfoLevels;
-   fileName : String;
+   fileName : UnicodeString;
    skipScan : Boolean;
 begin
    // 6.1 required for FindExInfoBasic (Win 2008 R2 or Win 7)
@@ -733,7 +723,7 @@ begin
    end;
 
    fileName:=directory+'*';
-   searchRec.Handle:=_FindFirstFileExA(PChar(Pointer(fileName)), infoLevel,
+   searchRec.Handle:=FindFirstFileExW(PWideChar(Pointer(fileName)), infoLevel,
                                      @searchRec.Data, FINDEX_SEARCH_OPS.FindExSearchNameMatch,
                                      nil, 0);
    if searchRec.Handle<>INVALID_HANDLE_VALUE then begin
@@ -1315,7 +1305,11 @@ begin
    {$ifdef DELPHI_XE_PLUS}
    fmt:=SysUtils.FormatSettings;
    {$else}
+   {$IFDEF FPC}
+   fmt:=SysUtils.FormatSettings;
+   {$ELSE}
    fmt:=SysUtils.TFormatSettings((@CurrencyString)^);
+   {$ENDIF}
    {$endif}
 end;
 

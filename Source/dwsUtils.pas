@@ -429,7 +429,7 @@ type
 
          function GetBucketObject(index : Integer) : TObject; inline;
          procedure SetBucketObject(index : Integer; obj : TObject); inline;
-         function GetBucketName(index : Integer) : String; inline;
+         function GetBucketName(index : Integer) : UnicodeString; inline;
 
       public
          constructor Create(initialCapacity : Integer = 0);
@@ -447,7 +447,7 @@ type
 
          property Bucket[index : Integer] : PNameObjectHashBucket read GetBucket;
          property BucketObject[index : Integer] : TObject read GetBucketObject write SetBucketObject;
-         property BucketName[index : Integer] : String read GetBucketName;
+         property BucketName[index : Integer] : UnicodeString read GetBucketName;
          property BucketIndex[const aName : UnicodeString] : Integer read GetIndex;
 
          property Count : Integer read FCount;
@@ -527,7 +527,7 @@ type
    end;
 
    TNameValueHashBucket<T> = record
-      Name : String;
+      Name : UnicodeString;
       Value : T;
    end;
 
@@ -695,7 +695,7 @@ type
          procedure WriteDigits(value : Int64; digits : Integer);
 
          // assumes data is an utf16 UnicodeString, spits out utf8 in FPC, utf16 in Delphi
-         function ToString : String; override;
+         function ToString : UnicodeString; {$IFDEF FPC} reintroduce; virtual; {$ELSE} override; {$ENDIF}
          function ToUTF8String : RawByteString;
          function ToBytes : TBytes;
          function ToRawBytes : RawByteString;
@@ -755,10 +755,10 @@ type
          function Sum : Double;
    end;
 
-   TSimpleStringHash = class(TSimpleHash<String>)
+   TSimpleStringHash = class(TSimpleHash<UnicodeString>)
       protected
-         function SameItem(const item1, item2 : String) : Boolean; override;
-         function GetItemHashCode(const item1 : String) : Integer; override;
+         function SameItem(const item1, item2 : UnicodeString) : Boolean; override;
+         function GetItemHashCode(const item1 : UnicodeString) : Integer; override;
    end;
 
    TFastCompareStringList = class (TStringList)
@@ -803,24 +803,24 @@ type
 
    TStringIterator = class
       private
-         FStr : String;
+         FStr : UnicodeString;
          FPStr : PChar;
          FPosition : Integer;
          FLength : Integer;
 
       public
-         constructor Create(const s : String);
+         constructor Create(const s : UnicodeString);
 
          function Current : Char; inline;
          function EOF : Boolean; inline;
          procedure Next; inline;
          procedure SkipWhiteSpace;
 
-         function CollectQuotedString : String;
-         function CollectAlphaNumeric : String;
+         function CollectQuotedString : UnicodeString;
+         function CollectAlphaNumeric : UnicodeString;
          function CollectInteger : Int64;
 
-         property Str : String read FStr;
+         property Str : UnicodeString read FStr;
          property Length : Integer read FLength write FLength;
    end;
 
@@ -1443,7 +1443,7 @@ end;
 // InitializeSmallIntegers
 //
 var
-   vSmallIntegers : array [0..39] of String;
+   vSmallIntegers : array [0..39] of UnicodeString;
 procedure InitializeSmallIntegers;
 var
    i : Integer;
@@ -1828,7 +1828,7 @@ begin
          {$ifdef DEBUG} Assert(TVarData(dest).VUString=nil); {$endif}
          TVarData(dest).VType:=varUString;
          {$IFDEF FPC}
-         UnicodeString(TVarData(dest).VString):=String(TVarData(src).VString);
+         UnicodeString(TVarData(dest).VString):=UnicodeString(TVarData(src).VString);
          {$ELSE}
          UnicodeString(TVarData(dest).VUString):=String(TVarData(src).VUString);
          {$ENDIF}
@@ -1939,7 +1939,7 @@ begin
          writer.WriteInteger(PVarData(@value).VInt64);
       varUString :
          {$ifdef FPC}
-         writer.WriteString(UnicodeString(PVarData(@value).VString));
+         writer.WriteUnicodeString(UnicodeString(PVarData(@value).VString));
          {$else}
          writer.WriteString(UnicodeString(PVarData(@value).VUString));
          {$endif}
@@ -2884,7 +2884,7 @@ end;
 {$ifdef FPC}
 function TFastCompareTextList.DoCompareText(const S1, S2: String): Integer;
 begin
-   Result:=UnicodeCompareText(s1, s2);
+   Result:=UnicodeCompareText(UTF8Decode(s1), UTF8Decode(s2));
 end;
 {$else}
 function TFastCompareTextList.CompareStrings(const S1, S2: UnicodeString): Integer;
@@ -3935,20 +3935,7 @@ end;
 
 // ToString
 //
-function TWriteOnlyBlockStream.ToString : String;
-{$ifdef FPC}
-var
-   uniBuf : UnicodeString;
-begin
-   if FTotalSize>0 then begin
-
-      Assert((FTotalSize and 1) = 0);
-      SetLength(uniBuf, FTotalSize div SizeOf(WideChar));
-      StoreData(uniBuf[1]);
-      Result:=UTF8Encode(uniBuf);
-
-   end else Result:='';
-{$else}
+function TWriteOnlyBlockStream.ToString : UnicodeString;
 begin
    if FTotalSize>0 then begin
 
@@ -3957,7 +3944,6 @@ begin
       StoreData(Result[1]);
 
    end else Result:='';
-   {$endif}
 end;
 
 // ToUTF8String
@@ -4770,7 +4756,7 @@ end;
 
 // GetBucketName
 //
-function TNameObjectHash.GetBucketName(index : Integer) : String;
+function TNameObjectHash.GetBucketName(index : Integer) : UnicodeString;
 begin
    Result:=FBuckets[index].Name;
 end;
@@ -5588,7 +5574,7 @@ end;
 
 // Create
 //
-constructor TStringIterator.Create(const s : String);
+constructor TStringIterator.Create(const s : UnicodeString);
 begin
    FStr:=s;
    FPStr:=PChar(Pointer(s));
@@ -5629,7 +5615,7 @@ end;
 
 // CollectQuotedString
 //
-function TStringIterator.CollectQuotedString : String;
+function TStringIterator.CollectQuotedString : UnicodeString;
 var
    quoteChar : Char;
 begin
@@ -5650,7 +5636,7 @@ end;
 
 // CollectAlphaNumeric
 //
-function TStringIterator.CollectAlphaNumeric : String;
+function TStringIterator.CollectAlphaNumeric : UnicodeString;
 var
    start : Integer;
 begin
@@ -5716,14 +5702,14 @@ end;
 
 // SameItem
 //
-function TSimpleStringHash.SameItem(const item1, item2 : String) : Boolean;
+function TSimpleStringHash.SameItem(const item1, item2 : UnicodeString) : Boolean;
 begin
    Result:=UnicodeSameText(item1, item2);
 end;
 
 // GetItemHashCode
 //
-function TSimpleStringHash.GetItemHashCode(const item1 : String) : Integer;
+function TSimpleStringHash.GetItemHashCode(const item1 : UnicodeString) : Integer;
 begin
    Result:=SimpleLowerCaseStringHash(item1);
 end;

@@ -24,7 +24,7 @@ unit dwsVCLGUIFunctions;
 interface
 
 uses
-   Windows, Forms, Dialogs, Classes,
+   {$IFNDEF FPC} Windows, {$ENDIF} Forms, Dialogs, Classes,
    dwsUtils, dwsStrings,
    dwsFunctions, dwsExprs, dwsSymbols, dwsMagicExprs, dwsExprList;
 
@@ -49,7 +49,11 @@ implementation
 //
 procedure TShowMessageFunc.DoEvalProc(const args : TExprBaseListExec);
 begin
+   {$IFDEF FPC}
+   ShowMessage(UTF8Encode(args.AsString[0]));
+   {$ELSE}
    ShowMessage(args.AsString[0]);
+   {$ENDIF}
 end;
 
 { TInputBoxFunc }
@@ -58,7 +62,11 @@ end;
 //
 procedure TInputBoxFunc.DoEvalAsString(const args : TExprBaseListExec; var Result : UnicodeString);
 begin
+   {$IFDEF FPC}
+   Result:=UTF8Decode(InputBox(UTF8Encode(args.AsString[0]), UTF8Encode(args.AsString[1]), UTF8Encode(args.AsString[2])));
+   {$ELSE}
    Result:=InputBox(args.AsString[0], args.AsString[1], args.AsString[2]);
+   {$ENDIF}
 end;
 
 initialization

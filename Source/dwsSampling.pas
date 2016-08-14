@@ -109,9 +109,9 @@ type
 //
 function TdwsSamplingsSorter.Compare(const item1, item2 : TdwsSample) : Integer;
 begin
-   Result:=CompareStr(item1.SourceName, item2.SourceName);
+   Result:=UnicodeCompareStr(item1.SourceName, item2.SourceName);
    if Result<>0 then Exit;
-   Result:=CompareStr(item1.FuncName, item2.FuncName);
+   Result:=UnicodeCompareStr(item1.FuncName, item2.FuncName);
    if Result<>0 then Exit;
    Result:=item1.Line-item2.Line;
 end;
@@ -126,9 +126,9 @@ function TdwsSamplings.Compare(const item1, item2 : TdwsSample) : Integer;
 begin
    Result:=item1.Line-item2.Line;
    if Result<>0 then Exit;
-   Result:=CompareStr(item1.FuncName, item2.FuncName);
+   Result:=UnicodeCompareStr(item1.FuncName, item2.FuncName);
    if Result<>0 then Exit;
-   Result:=CompareStr(item1.SourceName, item2.SourceName);
+   Result:=UnicodeCompareStr(item1.SourceName, item2.SourceName);
 end;
 
 // Create

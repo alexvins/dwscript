@@ -9,6 +9,10 @@ uses
 {$R *.res}
 
 begin
+  if FileExists('heap.trc') then
+    DeleteFile('heap.trc');
+  SetHeapTraceOutput('heap.trc');
+
   Set8087CW($133F);
   FormatSettings.DecimalSeparator:='.';
   Application.Initialize;
