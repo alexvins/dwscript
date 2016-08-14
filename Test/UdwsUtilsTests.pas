@@ -19,8 +19,8 @@ interface
 
 uses Classes, SysUtils, Math, Variants, Types,
    dwsXPlatformTests, dwsUtils,
-   dwsXPlatform, dwsWebUtils, dwsTokenStore, dwsCryptoXPlatform,
-   dwsEncodingLibModule, dwsGlobalVars, dwsEncoding, dwsDataContext;
+   dwsXPlatform, dwsWebUtils, {dwsTokenStore, dwsCryptoXPlatform,
+   dwsEncodingLibModule,} dwsGlobalVars, dwsEncoding, dwsDataContext;
 
 type
 
@@ -79,10 +79,10 @@ type
          procedure URLEncodedEncoder;
 
          procedure VariantClearAssignString;
-
+         {
          procedure MultiThreadedTokenStore;
          procedure TokenStoreData;
-
+         }
          procedure Base32EncoderTest;
 
          procedure NameObjectHashTest;
@@ -944,7 +944,7 @@ begin
    VarCopySafe(v, 'e');
    CheckEquals('e', v, 'e');
 end;
-
+ {
 // MultiThreadedTokenStore
 //
 type
@@ -1004,7 +1004,7 @@ begin
       store.Free;
    end;
 end;
-
+ }
 // Base32EncoderTest
 //
 procedure TdwsUtilsTests.Base32EncoderTest;
@@ -1134,7 +1134,7 @@ begin
    vGlobals.Initialize;
    try
       for i:=0 to High(threads) do
-         threads[i]:=TGlobalVarStress.Create;
+         threads[i]:=TGlobalVarStress.Create(false);
       for i:=0 to High(threads) do begin
          threads[i].WaitFor;
          threads[i].Free;

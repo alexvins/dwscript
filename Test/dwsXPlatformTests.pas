@@ -32,7 +32,7 @@ type
    TTestCase = class (fpcunit.TTestCase)
       public
          procedure CheckEquals(const expected, actual: UnicodeString; const msg: String = ''); overload;
-         procedure CheckEquals(const expected : String; const actual: UnicodeString; const msg: String = ''); overload;
+         //procedure CheckEquals(const expected : String; const actual: UnicodeString; const msg: String = ''); overload;
    end;
 
    ETestFailure = class (Exception);
@@ -44,9 +44,11 @@ type
          procedure CheckEquals(const expected : String; const actual: Variant; const msg: String = ''); overload;
    end;
    ETestFailure = TestFrameWork.ETestFailure;
-   {$endif}
 
    TTestCaseClass = class of TTestCase;
+   {$endif}
+
+
 
 procedure RegisterTest(const testName : String; aTest : TTestCaseClass);
 
@@ -76,10 +78,10 @@ procedure TTestCase.CheckEquals(const expected, actual: UnicodeString; const msg
 begin
    AssertTrue(msg + ComparisonMsg(Expected, Actual), AnsiCompareStr(Expected, Actual) = 0);
 end;
-procedure TTestCase.CheckEquals(const expected : String; const actual: UnicodeString; const msg: String = '');
-begin
-   AssertTrue(msg + ComparisonMsg(Expected, Actual), AnsiCompareStr(Expected, Actual) = 0);
-end;
+//procedure TTestCase.CheckEquals(const expected : String; const actual: UnicodeString; const msg: String = '');
+//begin
+//   AssertTrue(msg + ComparisonMsg(Expected, Actual), AnsiCompareStr(Expected, Actual) = 0);
+//end;
 
 {$else}
 

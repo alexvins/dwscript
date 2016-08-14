@@ -209,7 +209,7 @@ begin
 
             if prog.Msgs.HasErrors then continue;
 
-            expectedResult.LoadFromFile(ChangeFileExt(FTests[i], '.txt'));
+            expectedResult.LoadFromFile(ChangeFileExt(UnicodeString(FTests[i]), '.txt'));
             if Copy(expectedResult[0], 1, 5)='Swaps' then
                expectedResult.Delete(0); // variable part because of randomization
 
@@ -279,7 +279,7 @@ begin
          output:=exec.Result.ToString;
          if exec.Msgs.Count>0 then
             output:=output+#13#10+'>>> Runtime Error: '+exec.Msgs.AsInfo;
-         resultsFileName:=ChangeFileExt(FTests[i], '.txt');
+         resultsFileName:=ChangeFileExt(UnicodeString(FTests[i]), '.txt');
          if FileExists(resultsFileName) then begin
             expectedResult.LoadFromFile(resultsFileName);
             CheckEquals(expectedResult.Text, output, FTests[i]);

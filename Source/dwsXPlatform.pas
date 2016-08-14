@@ -704,6 +704,8 @@ type
       Data : TWin32FindData;
    end;
 
+   function _FindFirstFileExA(lpfilename : LPCStr;fInfoLevelId:FINDEX_INFO_LEVELS ;lpFindFileData:pointer;fSearchOp : FINDEX_SEARCH_OPS;lpSearchFilter:pointer;dwAdditionalFlags:dword):Handle; stdcall; external 'kernel32' name 'FindFirstFileExA';
+
 // CollectFilesMasked
 //
 procedure CollectFilesMasked(const directory : UnicodeString;
@@ -731,7 +733,7 @@ begin
    end;
 
    fileName:=directory+'*';
-   searchRec.Handle:=FindFirstFileEx(PChar(Pointer(fileName)), infoLevel,
+   searchRec.Handle:=_FindFirstFileExA(PChar(Pointer(fileName)), infoLevel,
                                      @searchRec.Data, FINDEX_SEARCH_OPS.FindExSearchNameMatch,
                                      nil, 0);
    if searchRec.Handle<>INVALID_HANDLE_VALUE then begin

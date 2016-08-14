@@ -341,7 +341,7 @@ procedure TCornerCasesTests.IncludeViaFile;
       n: Integer;
    begin
       SetLength(Result, MAX_PATH);
-      n:=GetTempPath(MAX_PATH-1, PChar(Result));
+      n:=GetTempPathW(MAX_PATH-1, PChar(Result));
       SetLength(Result, n);
    end;
 
@@ -398,7 +398,7 @@ procedure TCornerCasesTests.IncludeViaFileRestricted;
       n: Integer;
    begin
       SetLength(Result, MAX_PATH);
-      n:=GetTempPath(MAX_PATH-1, PChar(Result));
+      n:=GetTempPathW(MAX_PATH-1, PChar(Result));
       SetLength(Result, n);
    end;
 

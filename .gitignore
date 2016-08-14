@@ -32,3 +32,8 @@
 /Test/LanguageTestsXE5.dpr
 /Test/LanguageTestsXE6.dpr
 /Lazarus/lib/*
+/Test/units/*
+*.lps
+*.res
+/Test/lang_tests.exe
+/Test/lang_tests.fpcunit.ini

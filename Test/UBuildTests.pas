@@ -124,7 +124,7 @@ begin
             output:= 'Errors >>>>'#13#10
                     +prog.Msgs.AsInfo;
 
-            resultsFileName:=ChangeFileExt(FTests[i], '.txt');
+            resultsFileName:=ChangeFileExt(UnicodeString(FTests[i]), '.txt');
             if FileExists(resultsFileName) then begin
                expectedResult.LoadFromFile(resultsFileName);
                CheckEquals(expectedResult.Text, output, FTests[i]);
@@ -134,7 +134,7 @@ begin
                json:=TdwsJSONBeautifiedWriter.Create(nil, 0, 1);
                try
                   prog.SourceContextMap.WriteToJSON(json);
-                  contextMapFileName:=ChangeFileExt(FTests[i], '.cmap');
+                  contextMapFileName:=ChangeFileExt(UnicodeString(FTests[i]), '.cmap');
                   if FileExists(contextMapFileName) then begin
                      expectedResult.LoadFromFile(contextMapFileName);
                      CheckEquals(Trim(expectedResult.Text), json.Stream.ToString, FTests[i]);
@@ -200,7 +200,7 @@ begin
                  +prog.Msgs.AsInfo
       end;
 
-      resultsFileName:=ChangeFileExt(FTests[i], '.txt');
+      resultsFileName:=ChangeFileExt(UnicodeString(FTests[i]), '.txt');
       CheckEquals(LoadTextFromFile(resultsFileName), output, FTests[i]);
 
    end;

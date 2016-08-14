@@ -203,10 +203,10 @@ begin
          end;
 
          if coOptimize in FCompiler.Config.CompilerOptions then begin
-            resultsFileName:=ChangeFileExt(FTests[i], '.optimized.txt');
+            resultsFileName:=ChangeFileExt(UnicodeString(FTests[i]), '.optimized.txt');
             if not FileExists(resultsFileName) then
-               resultsFileName:=ChangeFileExt(FTests[i], '.txt');
-         end else resultsFileName:=ChangeFileExt(FTests[i], '.txt');
+               resultsFileName:=ChangeFileExt(UnicodeString(FTests[i]), '.txt');
+         end else resultsFileName:=ChangeFileExt(UnicodeString(FTests[i]), '.txt');
          {$ifdef FPC}
          if FileExists(ChangeFileExt(resultsFileName, '.fpctxt')) then
             resultsFileName:=ChangeFileExt(resultsFileName, '.fpctxt');
@@ -305,10 +305,10 @@ begin
          end;
 
          if coOptimize in FCompiler.Config.CompilerOptions then begin
-            expectedErrorsFileName:=ChangeFileExt(FFailures[i], '.optimized.txt');
+            expectedErrorsFileName:=ChangeFileExt(UnicodeString(FFailures[i]), '.optimized.txt');
             if not FileExists(expectedErrorsFileName) then
-               expectedErrorsFileName:=ChangeFileExt(FFailures[i], '.txt');
-         end else expectedErrorsFileName:=ChangeFileExt(FFailures[i], '.txt');
+               expectedErrorsFileName:=ChangeFileExt(UnicodeString(FFailures[i]), '.txt');
+         end else expectedErrorsFileName:=ChangeFileExt(UnicodeString(FFailures[i]), '.txt');
 
          if FileExists(expectedErrorsFileName) then begin
             expectedError.LoadFromFile(expectedErrorsFileName);

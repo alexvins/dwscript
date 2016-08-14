@@ -247,7 +247,7 @@ begin
 
          CheckEquals('', prog.Msgs.AsInfo, FTests[i]);
          exec:=prog.Execute;
-         resultsFileName:=ChangeFileExt(FTests[i], '.txt');
+         resultsFileName:=ChangeFileExt(UnicodeString(FTests[i]), '.txt');
          if FileExists(resultsFileName) then begin
             expectedResult.LoadFromFile(resultsFileName);
             CheckEquals(expectedResult.Text, exec.Result.ToString, FTests[i]);

@@ -926,8 +926,8 @@ procedure BytesToScriptString(const p : PByte; n : Integer; var result : Unicode
 function ScriptStringToRawByteString(const s : UnicodeString) : RawByteString; overload; inline;
 procedure ScriptStringToRawByteString(const s : UnicodeString; var result : RawByteString); overload;
 
-procedure StringBytesToWords(var buf : String; swap : Boolean);
-procedure StringWordsToBytes(var buf : String; swap : Boolean);
+procedure StringBytesToWords(var buf : UnicodeString; swap : Boolean);
+procedure StringWordsToBytes(var buf : UnicodeString; swap : Boolean);
 
 function BinToHex(const data; n : Integer) : String; overload;
 function BinToHex(const data : RawByteString) : String; overload; inline;
@@ -1122,7 +1122,7 @@ end;
 
 // StringBytesToWords
 //
-procedure StringBytesToWords(var buf : String; swap : Boolean);
+procedure StringBytesToWords(var buf : UnicodeString; swap : Boolean);
 type
    TTwoBytes = array [0..1] of Byte;
    TTwoWords = array [0..1] of Word;
@@ -1156,7 +1156,7 @@ end;
 
 // StringWordsToBytes
 //
-procedure StringWordsToBytes(var buf : String; swap : Boolean);
+procedure StringWordsToBytes(var buf : UnicodeString; swap : Boolean);
 type
    TTwoBytes = array [0..1] of Byte;
    TTwoWords = array [0..1] of Word;
