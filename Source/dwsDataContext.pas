@@ -177,6 +177,8 @@ type
 
    TGetPDataFunc = function : PData of object;
 
+   { TRelativeDataContext }
+
    TRelativeDataContext = class(TInterfacedObject, IDataContext, IGetSelf)
       private
          FGetPData : TGetPDataFunc;
@@ -220,6 +222,10 @@ type
          function SameData(addr : Integer; const otherData : TData; otherAddr, size : Integer) : Boolean; overload;
 
          function  HashCode(size : Integer) : Cardinal;
+
+         {$IFDEF FPC}
+         function ToString : UnicodeString; reintroduce; virtual;
+         {$ENDIF}
    end;
 
 procedure DWSCopyData(const sourceData : TData; sourceAddr : Integer;
@@ -1002,5 +1008,12 @@ function TRelativeDataContext.HashCode(size : Integer) : Cardinal;
 begin
    Result:=DWSHashCode(FGetPData^, FAddr, size);
 end;
+
+{$IFDEF FPC}
+function TRelativeDataContext.ToString: UnicodeString;
+begin
+  result := '';
+end;
+{$ENDIF}
 
 end.

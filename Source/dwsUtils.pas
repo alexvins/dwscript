@@ -53,6 +53,9 @@ type
          function  DecRefCount : Integer;
          property  RefCount : Integer read GetRefCount write SetRefCount;
          procedure Free;
+         {$ifdef FPC}
+         function ToString : UnicodeString; reintroduce; virtual;
+         {$endif}
    end;
    PRefCountedObject = ^TRefCountedObject;
 
@@ -61,7 +64,7 @@ type
    IGetSelf = interface
       ['{77D8EA0B-311C-422B-B8DE-AA5BDE726E41}']
       function GetSelf : TObject;
-      function ToString : String;
+      function ToString : UnicodeString;
    end;
 
    // TInterfacedSelfObject
@@ -732,7 +735,7 @@ type
          constructor Create;
          destructor Destroy; override;
 
-         function ToString : String; override;
+         function ToString : UnicodeString; override;
    end;
 
    TSimpleInt64List = class(TSimpleList<Int64>)
@@ -4949,6 +4952,13 @@ begin
    p^:=n;
 end;
 
+{$IFDEF FPC}
+function TRefCountedObject.ToString(): UnicodeString;
+begin
+   result := '';
+end;
+{$ENDIF}
+
 // ------------------
 // ------------------ TSimpleObjectObjectHash<T1, T2> ------------------
 // ------------------
@@ -5563,7 +5573,7 @@ end;
 
 // ToString
 //
-function TAutoWriteOnlyBlockStream.ToString : String;
+function TAutoWriteOnlyBlockStream.ToString : UnicodeString;
 begin
    Result:=FStream.ToString;
 end;

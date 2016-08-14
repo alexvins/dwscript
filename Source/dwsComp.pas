@@ -138,7 +138,7 @@ type
          procedure AddUnit(const aUnit : IdwsUnit); overload;
          function RemoveUnit(const aUnit : IdwsUnit): Boolean;
 
-         function Compile(const text : UnicodeString; const mainFileName : String = '') : IdwsProgram; virtual;
+         function Compile(const text : UnicodeString; const mainFileName : UnicodeString = '') : IdwsProgram; virtual;
          procedure RecompileInContext(const prog : IdwsProgram; const text : UnicodeString); virtual;
 
          procedure AbortCompilation;
@@ -590,13 +590,13 @@ type
    TdwsConstants = class(TdwsCollection)
       protected
          class function GetSymbolClass : TdwsSymbolClass; override;
-         function GetValues(const name : String) : Variant;
-         procedure SetValues(const name : String; const v : Variant);
+         function GetValues(const name : UnicodeString) : Variant;
+         procedure SetValues(const name : UnicodeString; const v : Variant);
 
       public
          function Add : TdwsConstant; inline;
 
-         property Values[const name : String] : Variant read GetValues write SetValues;
+         property Values[const name : UnicodeString] : Variant read GetValues write SetValues;
    end;
 
    TdwsConstantsClass = class of TdwsConstants;
@@ -1672,7 +1672,7 @@ end;
 
 // Compile
 //
-function TDelphiWebScript.Compile(const Text: UnicodeString; const mainFileName : String = ''): IdwsProgram;
+function TDelphiWebScript.Compile(const Text: UnicodeString; const mainFileName : UnicodeString = ''): IdwsProgram;
 begin
    Lock;
    try
@@ -5721,7 +5721,7 @@ end;
 
 // GetValues
 //
-function TdwsConstants.GetValues(const name : String) : Variant;
+function TdwsConstants.GetValues(const name : UnicodeString) : Variant;
 var
    i : Integer;
 begin
@@ -5733,7 +5733,7 @@ end;
 
 // SetValues
 //
-procedure TdwsConstants.SetValues(const name : String; const v : Variant);
+procedure TdwsConstants.SetValues(const name : UnicodeString; const v : Variant);
 var
    i : Integer;
    c : TdwsConstant;
