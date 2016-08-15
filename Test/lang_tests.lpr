@@ -4,7 +4,7 @@ program lang_tests;
 
 uses
   sysutils, Interfaces, Forms, dwsXPlatformTests, UAlgorithmsTests, UScriptTests, UdwsUnitTests, UCornerCasesTests,
-  GuiTestRunner;
+  UdwsFunctionsTests, GuiTestRunner;
 
 {$R *.res}
 

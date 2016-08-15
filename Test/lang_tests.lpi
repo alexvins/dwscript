@@ -50,7 +50,7 @@
         <PackageName Value="FCL"/>
       </Item5>
     </RequiredPackages>
-    <Units Count="6">
+    <Units Count="7">
       <Unit0>
         <Filename Value="lang_tests.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -64,17 +64,21 @@
         <IsPartOfProject Value="True"/>
       </Unit2>
       <Unit3>
-        <Filename Value="UdwsUnitTests.pas"/>
+        <Filename Value="UdwsFunctionsTests.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit3>
       <Unit4>
-        <Filename Value="UScriptTests.pas"/>
+        <Filename Value="UdwsUnitTests.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit4>
       <Unit5>
-        <Filename Value="dwsXPlatformTests.pas"/>
+        <Filename Value="UScriptTests.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit5>
+      <Unit6>
+        <Filename Value="dwsXPlatformTests.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit6>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
@@ -121,7 +125,7 @@
     </Other>
   </CompilerOptions>
   <Debugging>
-    <Exceptions Count="28">
+    <Exceptions Count="30">
       <Item1>
         <Name Value="EAbort"/>
       </Item1>
@@ -206,6 +210,12 @@
       <Item28>
         <Name Value="EAssertionFailed"/>
       </Item28>
+      <Item29>
+        <Name Value="EdwsExternalFuncHandler"/>
+      </Item29>
+      <Item30>
+        <Name Value="EISO8601Exception"/>
+      </Item30>
     </Exceptions>
   </Debugging>
 </CONFIG>
